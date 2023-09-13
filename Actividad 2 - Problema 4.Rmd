@@ -1,0 +1,73 @@
+---
+title: "Actividad 2 Problema 4"
+author: "Juliette Conde"
+date: "2023-09-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## *Actividad 2 Problema 4*
+### *Estimacion boostrap*
+
+Cuando se extrae una muestra de una poblacion que no es normal y se requiere estimar un intervalo de confianza se pueden utilizar los metodos de estimacion bootstrap. Esta metodologia supone que se puede reconstruir la poblacion objeto de estudio mediante un muestreo con reemplazo de la muestra que se tiene. Existen varias versiones del metodo. Una presentacion basica del metodo se describe a continuacion:
+
+El articulo de In-use Emissions from Heavy Duty Dissel Vehicles (J.Yanowitz, 2001) presenta las mediciones de eficiencia de combustible en millas/galon de una muestra de siete camiones. Los datos obtenidos son los siguientes: 7.69, 4.97, 4.56, 6.49, 4.34, 6.24 y 4.45. Se supone que es una muestra aleatoria de camiones y que se desea construir un intervalo de confianza del 95 % para la media de la eficiencia de combustible de esta poblacion. No se tiene informacion de la distribucion de los datos. El metodo bootstrap permite construir intervalos de confianza del 95 % - Para ilustrar el metodo suponga que coloca los valores de la muestra en una caja y extrae uno al azar. Este corresponderia al primer valor de la muestra bootstrap   $X_{1}^{*}$. Despues de anotado el valor se regresa $X_{1}^{*}$. a la caja y se extrae el valor $X_{2}^{*}$, regresandolo nuevamente. Este procedimiento se repite hasta completar una muestra de tamano n, $X_{1}^{*}$, $X_{2}^{*}$, $X_{2}^{*}$, $X_{n}^{*}$, conformando la muestra bootstrap.
+Es necesario extraer un gran número de muestras (suponga k = 1000). Para cada una de las muestra bootstrap obtenidas se calcula la media $\bar{X}_{i}^{*}$, obteniendose un valor para cada muestra. El intervalo de confianza queda conformado por los percentiles $P_{2.5}$ y $P_{97.5}$. Existen dos metodos para estimarlo:
+
+Metodo 1 $(P_{2.5}$ y $P_{97.5})$
+
+Metodo 2 $(2\bar{X}$$-P_{97.5}; 2\bar{X} -P_{2.5})$
+
+Construya el intervalo de confianza por los dos metodos y compare los resultados obtenidos. Comente los resultados. Confiaria en estas estimaciones?
+
+### *Solucion:* 
+
+```{r, echo=FALSE}
+x <- c(7.69, 4.97, 4.56, 6.49, 4.34, 6.24, 4.45) # datos muestra
+boost <- sample(x, 1000, replace = TRUE) #se estraen n x muestra
+m_eficiencia <-matrix(boost, nrow=1000, ncol=7, byrow = TRUE) #se construye matriz de n x m
+mx <- apply(m_eficiencia, 1, mean) #se calcula m medias por fila
+
+      
+```
+### *Metodo 1 $(P_{2.5}$ y $P_{97.5})$*
+
+```{r, echo=FALSE}
+ic1 <- quantile(mx, probs=c(0.025, 0.975)) #se calcula IC metodo 1 
+ic1
+```
+### *Metodo 2 $(2\bar{X}$$-P_{97.5}; 2\bar{X} -P_{2.5})$*
+
+```{r, echo=FALSE}
+ic2 <- c(2*mean(mx) - ic1[2], 2*mean(mx) - ic1[1])  #se calcula IC metodo 2
+ic2
+```
+
+Grafico de histograma:
+
+```{r, echo=FALSE}
+hist(mx, las=1, main=" ", ylab=" ", xlab= " ", col="#CCFFCC")
+abline(v=ic1, col="#FF7F00", lwd=2)
+abline(v=ic2, col="#0EB0C6", lwd=2)
+
+
+```
+<br>
+<br>
+
+### *Conclusiones:*
+
+<br>
+
+Como muestra la grafica se pueden ver de manera visual los intervalos de confianza usando ambos metodos, asi mismo se observa que el segundo estimador corrige el intervalo.
+
+¿Confiaria en estas estimaciones?
+
+Se puede ver que el metodo 1 y 2, una confianza del 97.5%, por lo cual se presume que son precisos los dos metodos.
+
+<br>
+
+<br>

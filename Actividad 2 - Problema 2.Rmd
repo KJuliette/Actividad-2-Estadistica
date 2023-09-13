@@ -1,0 +1,186 @@
+---
+title: "Actividad 2 - Problema 2"
+author: "Juliette Conde"
+date: "2023-09-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## *Actividad 2 Problema 2*
+## *Propiedades de los estimadores*
+La simulación ayuda a entender y validad las propiedades de los estimadores estadísticos como son. insesgadez, eficiencia y la consistencia principalmente. El siguiente problema permite evidenciar las principales características de un grupo de estimadores propuestos para la estimación de un parámetro asociado a un modelo de probabilidad.
+
+Sean X1, X2, X3 y X4, una muestra aleatoria de tamaño n=4 cuya población la conforma una distribución exponencial con parámetro θ desconocido. Determine las características de cada uno de los siguientes estimadores propuestos:
+
+<br>
+      
+$\hat{θ}_{1}$ = $\frac{X_{1}+X_{2}}{6}$ + $\frac{X_{3}+X_{4}}{3}$
+
+
+$\hat{θ}_{2}$ = $\frac{(X_{1}+2X_{2}+3X_{3}+4X_{4})}{5}$
+
+
+$\hat{θ}_{3}$ = $\frac{X_{1}+X_{2}+X_{3}+X_{4}}{4}$
+
+$\hat{θ}_{4}$ = $\frac{min\{{X_{1},X_{2},X_{3},X_{4}\}} + max\{{X_{1},X_{2},X_{3},X_{4}\}}}{2}$
+
+<br>
+
+### *Solución*
+
+
+```{r, echo=FALSE}
+muestras <- c(20, 50, 100, 1000, 10000, 100000)
+lambda1 <- 1/5
+
+calculo_estimadores <- function(muestra, lambda){
+
+  x1 <- rexp(muestra, lambda)
+  x2 <- rexp(muestra, lambda)
+  x3 <- rexp(muestra, lambda)
+  x4 <- rexp(muestra, lambda)
+  
+  base <- data.frame(x1, x2, x3, x4)
+  
+  #matriz_numerica <- as.matrix(base)
+  #matriz_numerica
+  
+  fx1 <- function(x1, x2, x3, x4){
+    return <- ((x1+x2)/6) + ((x3+x4)/3)
+  }
+  
+  fx2 <- function(x1, x2, x3, x4){
+    return <- ((x1+2*x2+3*x3+4*x4)/5)
+  }
+  
+  fx3 <- function(x1, x2, x3, x4){
+    return <- ((x1+x2+x3+x4)/4)
+  }
+  
+  maximo <- apply(base, 1, max)
+  minimo <- apply(base, 1, min)
+  
+  fx4 <- function(minimo, maximo){
+    return <- (minimo + maximo)/2
+  }
+  
+  theta1 <- fx1(x1, x2, x3, x4)
+  theta2 <- fx2(x1, x2, x3, x4)
+  theta3 <- fx3(x1, x2, x3, x4)
+  theta4 <- fx4(minimo, maximo)
+  
+  estimadores <- data.frame(theta1, theta2, theta3, theta4)
+  
+  #boxplot(estimadores, las=1)
+  #abline(h=5, col="red")
+  
+  boxplot(
+    estimadores,
+    col = c("blue", "green", "yellow"),  # Colores para los grupos
+    border = "black",                 # Color del borde de las cajas
+    main = "Grafico de Caja",         # Título principal
+    xlab = "Grupos",                  # Etiqueta del eje X
+    ylab = "Valores",                 # Etiqueta del eje Y
+    notch = FALSE                      # Agregar muescas
+  )
+  abline(h=5, col="red")
+  
+matriz_numerica <- as.matrix(estimadores)
+  
+  media <- mean(matriz_numerica)
+varianza <- var(matriz_numerica)
+cat("media", media, "\n")
+cat("varianza", varianza, "\n")
+
+}
+```
+
+```{r}
+calculo_estimadores(muestras[1], lambda1)
+```
+
+<br>
+
+Se observa en los estimadores, lo siguiente:
+Theta 1: Insesgado.
+Theta 2: Sesgado
+Theta 3: Insesgado
+Theta 4: Insesgado, eficiente.
+
+<br>
+
+```{r}
+calculo_estimadores(muestras[2], lambda1)
+```
+
+<br>
+
+Se observa en los estimadores, lo siguiente:
+Theta 1: Insesgado, eficiente.
+Theta 2: Sesgado
+Theta 3: Insesgado, eficiente.
+Theta 4: Insesgado.
+
+<br>
+
+```{r}
+calculo_estimadores(muestras[3], lambda1)
+```
+
+<br>
+
+Se observa en los estimadores, lo siguiente:
+Theta 1: Insesgado, eficiente.
+Theta 2: Sesgado
+Theta 3: Insesgado, eficiente.
+Theta 4: Insesgado.
+
+<br>
+
+```{r}
+calculo_estimadores(muestras[4], lambda1)
+```
+
+<br>
+
+Se observa en los estimadores, lo siguiente:
+Theta 1: Insesgado, eficiente.
+Theta 2: Sesgado
+Theta 3: Insesgado, eficiente.
+Theta 4: Insesgado, eficiente.
+
+<br>
+
+```{r}
+calculo_estimadores(muestras[5], lambda1)
+```
+<br>
+
+Se observa en los estimadores, lo siguiente:
+Theta 1: Insesgado, eficiente.
+Theta 2: Sesgado
+Theta 3: Insesgado, eficiente.
+Theta 4: Insesgado, eficiente.
+
+<br>
+
+```{r}
+calculo_estimadores(muestras[6], lambda1)
+```
+
+Se observa en los estimadores, lo siguiente:
+Theta 1: Insesgado, eficiente.
+Theta 2: Sesgado
+Theta 3: Insesgado, eficiente.
+Theta 4: Insesgado, eficiente.
+
+<br>
+<br>
+
+### *Analisis:*
+Se llega a la conclusión que al realizar la simulación para los diferentes tamaños de la muestra con los estimadores propuestos se aprecia que se aumenta el tamaño de la muestra de los estimadores con una tendencia a la normalidad en sus diferentes características, como son insesgado, eficiente, sesgado y consistente. 
+
+<br>

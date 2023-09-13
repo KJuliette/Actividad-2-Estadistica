@@ -1,0 +1,83 @@
+---
+title: "Actividad 2 - Problema 1"
+author: "Juliette Conde"
+date: "2023-09-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+## *Actividad 2 Problema 1*
+### *Pasos sugeridos:*
+
+a. Genere n coordenadas x : X1, . . . , Xn
+. Utilice la distribución uniforme con valor mínimo de 0 y valor máximo de 1
+. La distribución uniforme genera variables aleatorias que tienen la misma probabilidad de venir de cualquier parte del intervalo (0,1).
+
+b. Genere 1000 coordenadas y : Y1,...,Yn, utilizando nuevamente la distribución uniforme con valor mínimo de 0 y valor máximo de 1.
+
+c. Cada punto (Xi,Yi) se encuentra dentro del círculo si su distancia desde el centro (0.5,0.5)
+ es menor a 0.5. Para cada par (Xi,Yi) determine si la distancia desde el centro es menor a 0.5
+. Esto último se puede realizar al calcular el valor (Xi−0.5)^2 + (Yi−0.5)^2, que es el cuadrado de la distancia, y al determinar si es menor que 0.25.
+
+d. ¿Cuántos de los puntos están dentro del círculo? ¿Cuál es su estimación de π?
+
+### *Solución Pasos:* 
+```{r, echo=FALSE}
+estimar_pi <- function(puntos){
+
+x <- runif(puntos, min = 0, max = 1)
+y <- runif(puntos, min = 0, max = 1)
+
+distancia_centro <- ((x - 0.5)^2) + ((y - 0.5)^2)
+dentro <- which(distancia_centro <= 0.25)
+contar <- length(dentro)
+
+cantidad_puntos <- paste("La cantidad de puntos dentro del circulo es de", contar)
+print(cantidad_puntos)
+estimacion <- paste("La estimacion de PI es", (4 * contar/puntos))
+print(estimacion)
+}
+
+punto <- 1000
+
+x <- runif(punto, min = 0, max = 1)
+y <- runif(punto, min = 0, max = 1)
+data <- data.frame(x = x, y = y)
+
+ggplot(data, aes(x = x, y = y)) +
+  geom_point(color = "blue", shape = 16) +
+  labs(title = "Grafico de puntos", x = "Eje x", y = "Eje y")
+
+```
+<br>
+
+### *Estimación con 1000 puntos*
+
+```{r}
+estimar_pi(1000)
+
+```
+### *Estimación con 10000 puntos*
+
+```{r}
+estimar_pi(10000)
+
+```
+### *Estimación con 100000 puntos*
+
+```{r}
+estimar_pi(100000)
+
+```
+<br>
+
+### *Conclusión:*
+
+Se concluye que para tener una estimación acertada se requiere mayor cantidad de puntos.
+
+<br>
+<br>

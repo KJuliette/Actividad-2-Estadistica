@@ -1,0 +1,840 @@
+---
+title: "Actividad 2 - Problema 3"
+author: "Juliette Conde"
+date: "2023-09-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## *Actividad 2 Problema 3*
+### *Teorema del Límite Central*
+
+El Teorema del Límite Central es uno de los más importantes en la inferencia estadística y habla sobre la convergencia de los estimadores como la proporción muestral a la distribución normal. Algunos autores afirman que esta aproximación es bastante buena a partir del umbral n>30.
+
+A continuación se describen los siguientes pasos para su verificación:
+
+a. Realice una simulación en la cual genere una población de n=1000 (Lote, donde el porcentaje de individuos (supongamos plantas) enfermas sea del 50%.
+
+```{r, echo=FALSE}
+par(cex = 0.5, cex.axis = .5, cex.lab = .5, cex.main = .5, cex.sub = .5, mfrow = c(3, 2), mai = c(.5, .5, .5, .5))
+```
+### *Solución a:*
+```{r}
+# a
+poblacion = rbinom(1000, 1, 0.5)
+```
+### *Solución b:*
+Genere una función que permita:
+•	Obtener una muestra aleatoria de la población y
+•	Calcule el estimador de la proporción muestral pˆ para un tamaño de muestra dado n.
+
+
+```{r, echo=FALSE}
+# b
+muestra_p <- function(poblacion, muestra_poblacion){
+  muestra <-  sample(poblacion, muestra_poblacion)
+  estimador_p <- mean(muestra)
+  return(estimador_p)
+}
+```
+### *Solución c:*
+Repita el escenario anterior (b) n=500 veces y analice los resultados en cuanto al comportamiento de los 500 resultados del estimador pˆ. ¿Qué tan simétricos o sesgados son los resultados obtenidos? y ¿qué se puede observar en cuanto a la variabilidad? Realice en su informe un comentario sobre los resultados obtenidos.
+
+```{r, echo=FALSE}
+# c
+base <- data.frame()
+
+tamano_muestra <- 100
+numero_repeticiones <- 500
+
+for (i in 1:numero_repeticiones) {
+  muestra1 = muestra_p(poblacion, tamano_muestra)
+  base <- rbind(base, muestra1)
+}
+colnames(base) <- "Estimador"
+matriz_numerica <- as.matrix(base)
+
+hist(matriz_numerica)
+m1 = density(matriz_numerica)
+plot(m1, main="caja", xlab=" n=1")
+
+shapiro.test(matriz_numerica)
+
+media_estimador_base <- mean(matriz_numerica)
+sesgo <- media_estimador_base - 0.5
+varianza <- var(matriz_numerica)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+
+```
+### *Solución d:*
+Repita los puntos b y c para tamaños de muestra n=5, 10, 15, 20, 30, 50, 60, 100, 200, 500. Compare los resultados obtenidos para los diferentes tamaños de muestra en cuanto a la normalidad. Utilice pruebas de bondad y ajuste (shapiro wilks :shspiro.test()) y métodos gráficos (gráfico de normalidad: qqnorm()). Comente en su informe los resultados obtenidos.
+
+```{r, echo=FALSE}
+repeticion_d <- function(poblacion, t_muestra) {
+  base <- data.frame()
+  numero_repeticiones <- 500
+  for (i in 1:numero_repeticiones) {
+    muestra1 = muestra_p(poblacion, t_muestra)
+    base <- rbind(base, muestra1)
+  }
+  colnames(base) <- "Estimador"
+  base
+}
+
+vector_muestras <- c(5, 10, 15, 20, 30, 50, 60, 100, 200, 500)
+
+```
+<br>
+
+### *Muestra 5*
+```{r, echo=FALSE}
+
+muestra_5 <- repeticion_d(poblacion, vector_muestras[1])
+matriz_numerica1 <- as.matrix(muestra_5)
+hist(matriz_numerica1)
+m2 = density(matriz_numerica1)
+plot(m2, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica1)
+
+media_estimador_5 <- mean(matriz_numerica1)
+sesgo <- media_estimador_5 - 0.5
+varianza <- var(matriz_numerica1)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+
+```
+<br>
+
+### *Muestra 10*
+```{r, echo=FALSE}
+
+muestra_10 <- repeticion_d(poblacion, vector_muestras[2])
+matriz_numerica2 <- as.matrix(muestra_10)
+hist(matriz_numerica2)
+m3 = density(matriz_numerica2)
+plot(m3, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica2)
+
+media_estimador_10 <- mean(matriz_numerica2)
+sesgo <- media_estimador_10 - 0.5
+varianza <- var(matriz_numerica2)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+
+```
+<br>
+
+### *Muestra 15*
+```{r, echo=FALSE}
+muestra_15 <- repeticion_d(poblacion, vector_muestras[3])
+matriz_numerica3 <- as.matrix(muestra_15)
+hist(matriz_numerica3)
+m4 = density(matriz_numerica3)
+plot(m4, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica3)
+
+media_estimador_15 <- mean(matriz_numerica3)
+sesgo <- media_estimador_15 - 0.5
+varianza <- var(matriz_numerica3)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 20*
+```{r, echo=FALSE}
+muestra_20 <- repeticion_d(poblacion, vector_muestras[4])
+matriz_numerica4 <- as.matrix(muestra_20)
+hist(matriz_numerica4)
+m5 = density(matriz_numerica4)
+plot(m5, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica4)
+
+media_estimador_20 <- mean(matriz_numerica4)
+sesgo <- media_estimador_20 - 0.5
+varianza <- var(matriz_numerica4)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 30*
+```{r, echo=FALSE}
+muestra_30 <- repeticion_d(poblacion, vector_muestras[5])
+matriz_numerica5 <- as.matrix(muestra_30)
+hist(matriz_numerica5)
+m6 = density(matriz_numerica5)
+plot(m6, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica5)
+
+media_estimador_30 <- mean(matriz_numerica5)
+sesgo <- media_estimador_30 - 0.5
+varianza <- var(matriz_numerica5)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 50*
+```{r, echo=FALSE}
+muestra_50 <- repeticion_d(poblacion, vector_muestras[6])
+matriz_numerica6 <- as.matrix(muestra_50)
+hist(matriz_numerica6)
+m7 = density(matriz_numerica6)
+plot(m7, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica6)
+
+media_estimador_50 <- mean(matriz_numerica6)
+sesgo <- media_estimador_50 - 0.5
+varianza <- var(matriz_numerica6)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 60*
+```{r, echo=FALSE}
+muestra_60 <- repeticion_d(poblacion, vector_muestras[7])
+matriz_numerica7 <- as.matrix(muestra_60)
+hist(matriz_numerica7)
+m8 = density(matriz_numerica7)
+plot(m8, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica7)
+
+media_estimador_60 <- mean(matriz_numerica7)
+sesgo <- media_estimador_60 - 0.5
+varianza <- var(matriz_numerica7)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 100*
+```{r, echo=FALSE}
+muestra_100 <- repeticion_d(poblacion, vector_muestras[8])
+matriz_numerica8 <- as.matrix(muestra_100)
+hist(matriz_numerica8)
+m9 = density(matriz_numerica8)
+plot(m9, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica8)
+
+media_estimador_100 <- mean(matriz_numerica8)
+sesgo <- media_estimador_100 - 0.5
+varianza <- var(matriz_numerica8)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 200*
+```{r, echo=FALSE}
+muestra_200 <- repeticion_d(poblacion, vector_muestras[9])
+matriz_numerica9 <- as.matrix(muestra_200)
+hist(matriz_numerica9)
+m10 = density(matriz_numerica9)
+plot(m10, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica9)
+
+media_estimador_200 <- mean(matriz_numerica9)
+sesgo <- media_estimador_200 - 0.5
+varianza <- var(matriz_numerica9)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 500*
+```{r, echo=FALSE}
+muestra_500 <- repeticion_d(poblacion, vector_muestras[10])
+matriz_numerica10 <- as.matrix(muestra_500)
+hist(matriz_numerica10)
+m11 = density(matriz_numerica10)
+plot(m11, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica10)
+
+media_estimador_500 <- mean(matriz_numerica10)
+sesgo <- media_estimador_500 - 0.5
+varianza <- var(matriz_numerica10)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Solución E:*
+e.	Repita toda la simulación (puntos a – d), pero ahora para lotes con 10% de plantas enfermas.
+
+```{r}
+# a
+poblacion = rbinom(1000, 1, 0.1)
+```
+
+```{r, echo=FALSE}
+# b
+muestra_p <- function(poblacion, muestra_poblacion){
+  muestra <-  sample(poblacion, muestra_poblacion)
+  estimador_p <- mean(muestra)
+  return(estimador_p)
+}
+```
+
+```{r, echo=FALSE}
+# c
+base <- data.frame()
+
+tamano_muestra <- 100
+numero_repeticiones <- 500
+
+for (i in 1:numero_repeticiones) {
+  muestra1 = muestra_p(poblacion, tamano_muestra)
+  base <- rbind(base, muestra1)
+}
+colnames(base) <- "Estimador"
+matriz_numerica <- as.matrix(base)
+
+hist(matriz_numerica)
+m1 = density(matriz_numerica)
+plot(m1, main="caja", xlab=" n=1")
+
+shapiro.test(matriz_numerica)
+
+media_estimador_base <- mean(matriz_numerica)
+sesgo <- media_estimador_base - 0.5
+varianza <- var(matriz_numerica)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+
+```
+
+
+
+```{r, echo=FALSE}
+repeticion_d <- function(poblacion, t_muestra) {
+  base <- data.frame()
+  numero_repeticiones <- 500
+  for (i in 1:numero_repeticiones) {
+    muestra1 = muestra_p(poblacion, t_muestra)
+    base <- rbind(base, muestra1)
+  }
+  colnames(base) <- "Estimador"
+  base
+}
+
+vector_muestras <- c(5, 10, 15, 20, 30, 50, 60, 100, 200, 500)
+
+```
+<br>
+
+### *Muestra 5*
+```{r, echo=FALSE}
+
+muestra_5 <- repeticion_d(poblacion, vector_muestras[1])
+matriz_numerica1 <- as.matrix(muestra_5)
+hist(matriz_numerica1)
+m2 = density(matriz_numerica1)
+plot(m2, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica1)
+
+media_estimador_5 <- mean(matriz_numerica1)
+sesgo <- media_estimador_5 - 0.5
+varianza <- var(matriz_numerica1)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+
+```
+<br>
+
+### *Muestra 10*
+```{r, echo=FALSE}
+
+muestra_10 <- repeticion_d(poblacion, vector_muestras[2])
+matriz_numerica2 <- as.matrix(muestra_10)
+hist(matriz_numerica2)
+m3 = density(matriz_numerica2)
+plot(m3, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica2)
+
+media_estimador_10 <- mean(matriz_numerica2)
+sesgo <- media_estimador_10 - 0.5
+varianza <- var(matriz_numerica2)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+
+```
+<br>
+
+### *Muestra 15*
+```{r, echo=FALSE}
+muestra_15 <- repeticion_d(poblacion, vector_muestras[3])
+matriz_numerica3 <- as.matrix(muestra_15)
+hist(matriz_numerica3)
+m4 = density(matriz_numerica3)
+plot(m4, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica3)
+
+media_estimador_15 <- mean(matriz_numerica3)
+sesgo <- media_estimador_15 - 0.5
+varianza <- var(matriz_numerica3)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 20*
+```{r, echo=FALSE}
+muestra_20 <- repeticion_d(poblacion, vector_muestras[4])
+matriz_numerica4 <- as.matrix(muestra_20)
+hist(matriz_numerica4)
+m5 = density(matriz_numerica4)
+plot(m5, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica4)
+
+media_estimador_20 <- mean(matriz_numerica4)
+sesgo <- media_estimador_20 - 0.5
+varianza <- var(matriz_numerica4)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 30*
+```{r, echo=FALSE}
+muestra_30 <- repeticion_d(poblacion, vector_muestras[5])
+matriz_numerica5 <- as.matrix(muestra_30)
+hist(matriz_numerica5)
+m6 = density(matriz_numerica5)
+plot(m6, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica5)
+
+media_estimador_30 <- mean(matriz_numerica5)
+sesgo <- media_estimador_30 - 0.5
+varianza <- var(matriz_numerica5)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 50*
+```{r, echo=FALSE}
+muestra_50 <- repeticion_d(poblacion, vector_muestras[6])
+matriz_numerica6 <- as.matrix(muestra_50)
+hist(matriz_numerica6)
+m7 = density(matriz_numerica6)
+plot(m7, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica6)
+
+media_estimador_50 <- mean(matriz_numerica6)
+sesgo <- media_estimador_50 - 0.5
+varianza <- var(matriz_numerica6)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 60*
+```{r, echo=FALSE}
+muestra_60 <- repeticion_d(poblacion, vector_muestras[7])
+matriz_numerica7 <- as.matrix(muestra_60)
+hist(matriz_numerica7)
+m8 = density(matriz_numerica7)
+plot(m8, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica7)
+
+media_estimador_60 <- mean(matriz_numerica7)
+sesgo <- media_estimador_60 - 0.5
+varianza <- var(matriz_numerica7)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 100*
+```{r, echo=FALSE}
+muestra_100 <- repeticion_d(poblacion, vector_muestras[8])
+matriz_numerica8 <- as.matrix(muestra_100)
+hist(matriz_numerica8)
+m9 = density(matriz_numerica8)
+plot(m9, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica8)
+
+media_estimador_100 <- mean(matriz_numerica8)
+sesgo <- media_estimador_100 - 0.5
+varianza <- var(matriz_numerica8)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 200*
+```{r, echo=FALSE}
+muestra_200 <- repeticion_d(poblacion, vector_muestras[9])
+matriz_numerica9 <- as.matrix(muestra_200)
+hist(matriz_numerica9)
+m10 = density(matriz_numerica9)
+plot(m10, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica9)
+
+media_estimador_200 <- mean(matriz_numerica9)
+sesgo <- media_estimador_200 - 0.5
+varianza <- var(matriz_numerica9)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 500*
+```{r, echo=FALSE}
+muestra_500 <- repeticion_d(poblacion, vector_muestras[10])
+matriz_numerica10 <- as.matrix(muestra_500)
+hist(matriz_numerica10)
+m11 = density(matriz_numerica10)
+plot(m11, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica10)
+
+media_estimador_500 <- mean(matriz_numerica10)
+sesgo <- media_estimador_500 - 0.5
+varianza <- var(matriz_numerica10)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+
+<br>
+
+### *Solución E:1*
+Repita toda la simulación (puntos a – d), de nuevo para lotes con un 90% de plantas enfermas.
+
+### *a*
+```{r}
+# a
+poblacion = rbinom(1000, 1, 0.9)
+```
+### *b*
+```{r, echo=FALSE}
+# b
+muestra_p <- function(poblacion, muestra_poblacion){
+  muestra <-  sample(poblacion, muestra_poblacion)
+  estimador_p <- mean(muestra)
+  return(estimador_p)
+}
+```
+### *c*
+```{r, echo=FALSE}
+# c
+base <- data.frame()
+
+tamano_muestra <- 100
+numero_repeticiones <- 500
+
+for (i in 1:numero_repeticiones) {
+  muestra1 = muestra_p(poblacion, tamano_muestra)
+  base <- rbind(base, muestra1)
+}
+colnames(base) <- "Estimador"
+matriz_numerica <- as.matrix(base)
+
+hist(matriz_numerica)
+m1 = density(matriz_numerica)
+plot(m1, main="caja", xlab=" n=1")
+
+shapiro.test(matriz_numerica)
+
+media_estimador_base <- mean(matriz_numerica)
+sesgo <- media_estimador_base - 0.5
+varianza <- var(matriz_numerica)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+
+```
+### *d*
+```{r, echo=FALSE}
+repeticion_d <- function(poblacion, t_muestra) {
+  base <- data.frame()
+  numero_repeticiones <- 500
+  for (i in 1:numero_repeticiones) {
+    muestra1 = muestra_p(poblacion, t_muestra)
+    base <- rbind(base, muestra1)
+  }
+  colnames(base) <- "Estimador"
+  base
+}
+
+vector_muestras <- c(5, 10, 15, 20, 30, 50, 60, 100, 200, 500)
+
+```
+<br>
+
+### *Muestra 5*
+```{r, echo=FALSE}
+
+muestra_5 <- repeticion_d(poblacion, vector_muestras[1])
+matriz_numerica1 <- as.matrix(muestra_5)
+hist(matriz_numerica1)
+m2 = density(matriz_numerica1)
+plot(m2, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica1)
+
+media_estimador_5 <- mean(matriz_numerica1)
+sesgo <- media_estimador_5 - 0.5
+varianza <- var(matriz_numerica1)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+
+```
+<br>
+
+### *Muestra 10*
+```{r, echo=FALSE}
+
+muestra_10 <- repeticion_d(poblacion, vector_muestras[2])
+matriz_numerica2 <- as.matrix(muestra_10)
+hist(matriz_numerica2)
+m3 = density(matriz_numerica2)
+plot(m3, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica2)
+
+media_estimador_10 <- mean(matriz_numerica2)
+sesgo <- media_estimador_10 - 0.5
+varianza <- var(matriz_numerica2)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+
+```
+<br>
+
+### *Muestra 15*
+```{r, echo=FALSE}
+muestra_15 <- repeticion_d(poblacion, vector_muestras[3])
+matriz_numerica3 <- as.matrix(muestra_15)
+hist(matriz_numerica3)
+m4 = density(matriz_numerica3)
+plot(m4, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica3)
+
+media_estimador_15 <- mean(matriz_numerica3)
+sesgo <- media_estimador_15 - 0.5
+varianza <- var(matriz_numerica3)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 20*
+```{r, echo=FALSE}
+muestra_20 <- repeticion_d(poblacion, vector_muestras[4])
+matriz_numerica4 <- as.matrix(muestra_20)
+hist(matriz_numerica4)
+m5 = density(matriz_numerica4)
+plot(m5, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica4)
+
+media_estimador_20 <- mean(matriz_numerica4)
+sesgo <- media_estimador_20 - 0.5
+varianza <- var(matriz_numerica4)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 30*
+```{r, echo=FALSE}
+muestra_30 <- repeticion_d(poblacion, vector_muestras[5])
+matriz_numerica5 <- as.matrix(muestra_30)
+hist(matriz_numerica5)
+m6 = density(matriz_numerica5)
+plot(m6, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica5)
+
+media_estimador_30 <- mean(matriz_numerica5)
+sesgo <- media_estimador_30 - 0.5
+varianza <- var(matriz_numerica5)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 50*
+```{r, echo=FALSE}
+muestra_50 <- repeticion_d(poblacion, vector_muestras[6])
+matriz_numerica6 <- as.matrix(muestra_50)
+hist(matriz_numerica6)
+m7 = density(matriz_numerica6)
+plot(m7, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica6)
+
+media_estimador_50 <- mean(matriz_numerica6)
+sesgo <- media_estimador_50 - 0.5
+varianza <- var(matriz_numerica6)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 60*
+```{r, echo=FALSE}
+muestra_60 <- repeticion_d(poblacion, vector_muestras[7])
+matriz_numerica7 <- as.matrix(muestra_60)
+hist(matriz_numerica7)
+m8 = density(matriz_numerica7)
+plot(m8, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica7)
+
+media_estimador_60 <- mean(matriz_numerica7)
+sesgo <- media_estimador_60 - 0.5
+varianza <- var(matriz_numerica7)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 100*
+```{r, echo=FALSE}
+muestra_100 <- repeticion_d(poblacion, vector_muestras[8])
+matriz_numerica8 <- as.matrix(muestra_100)
+hist(matriz_numerica8)
+m9 = density(matriz_numerica8)
+plot(m9, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica8)
+
+media_estimador_100 <- mean(matriz_numerica8)
+sesgo <- media_estimador_100 - 0.5
+varianza <- var(matriz_numerica8)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 200*
+```{r, echo=FALSE}
+muestra_200 <- repeticion_d(poblacion, vector_muestras[9])
+matriz_numerica9 <- as.matrix(muestra_200)
+hist(matriz_numerica9)
+m10 = density(matriz_numerica9)
+plot(m10, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica9)
+
+media_estimador_200 <- mean(matriz_numerica9)
+sesgo <- media_estimador_200 - 0.5
+varianza <- var(matriz_numerica9)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+<br>
+
+### *Muestra 500*
+```{r, echo=FALSE}
+muestra_500 <- repeticion_d(poblacion, vector_muestras[10])
+matriz_numerica10 <- as.matrix(muestra_500)
+hist(matriz_numerica10)
+m11 = density(matriz_numerica10)
+plot(m11, main=" ", xlab = "n=1")
+
+shapiro.test(matriz_numerica10)
+
+media_estimador_500 <- mean(matriz_numerica10)
+sesgo <- media_estimador_500 - 0.5
+varianza <- var(matriz_numerica10)
+
+cat("sesgo de estimadores pˆ:", sesgo, "\n")
+cat("varianza de estimadores pˆ:", varianza, "\n")
+```
+
+
+<br>
+<br>
+
+### *Analisis:*
+Se concluye que para una poblacion en la cual se tiene el 50% de plantas enfermas segun el enunciado, las gráficas y las medidas de estimacion se tienden a estabilizar a partir de una muestra de 50 datos para la cual la grafica se empieza a tornar simetrica con respecto a la media.
+Para una poblacion de plantas enfermas de un 10%, la tendencia es a normalizarse, de una muestra de 100, con cierta inclinacion hacia la izquierda.
+
+
+
+
+
+
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
